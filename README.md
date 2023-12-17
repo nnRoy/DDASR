@@ -22,9 +22,9 @@ This is the code reproduce repository for the paper [DDASR: Deep Diverse API Seq
 
 ## Architectures
 ### RNN encoder-decoder
-*BiLSTM is used as the encoder and GRU is used as the decoder.
+* BiLSTM is used as the encoder and GRU is used as the decoder.
 ### Transformer encoder-decoder
-*Transformer with six layers is used as the encoder end the decoder.
+* Transformer with six layers is used as the encoder end the decoder.
 ### LLM encoder-decoder
 We utilize five recent LLMs as the encoder and Tansformer with six layers as the decoder.
 * CodeBERT: microsoft/codebert-base [https://huggingface.co/microsoft/codebert-base]
