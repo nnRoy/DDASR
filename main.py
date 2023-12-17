@@ -116,7 +116,7 @@ def train():
                 f_eval = open(f"./output/{modelName}/{timestamp}/results/iter{itr_global}.txt",'w')
 
                 topk = config.topk
-                max_bleu, avg_bleu, map, mrr, ndcg = evaluate(model, metrics, test_loader, vocab_desc, vocab_api, topk, f_eval)
+                max_bleu, avg_bleu, map, ndcg = evaluate(model, metrics, test_loader, vocab_desc, vocab_api, topk, f_eval)
 
                 if max_map == 0 and max_iter == 0:
                     save_model(model, modelName, itr_global, timestamp)
