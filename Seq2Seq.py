@@ -5,10 +5,9 @@ import json
 from array import array
 import numpy as np
 from helper import PAD_ID
-from Encoder import RNNEncoder
-from Decoder import RNNDecoder
+from Encoder import Encoder
+from Decoder import Decoder
 from LossLongtail import Loss_Longtail,Loss_Longtail_Division
-from utils import getWeight, getWeight1
 
 class Seq2Seq(nn.Module):
     def __init__(self):
