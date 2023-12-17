@@ -15,9 +15,9 @@ This is the code reproduce repository for the paper [DDASR: Deep Diverse API Seq
 * Metrics.py: evaluation metrics
 * main.py: you can run this file to train the model
 ## Dataset
-For the original Java dataset, you can download from [https://github.com/huxd/deepAPI].
-For the Python dataset, you can download from [https://github.com/hapsby/deepAPIRevisited].
-For the diverse Java dataset, since the dataset is quite large, I have to upload it using Google Drive. Please download the full package using the following link:
+* For the original Java dataset, you can download from [https://github.com/huxd/deepAPI].
+* For the Python dataset, you can download from [https://github.com/hapsby/deepAPIRevisited].
+* For the diverse Java dataset, since the dataset is quite large, I have to upload it using Google Drive. Please download the full package using the following link:
 [https://drive.google.com/drive/folders/16c2ZbXr2N2Q_v8fjvLBdUWh2pVQQZhng?usp=sharing]
 
 
