@@ -8,6 +8,94 @@ from helper import SOS_ID, EOS_ID, PAD_ID
 from queue import PriorityQueue
 import numpy as np
 from Attention import Attention
+class PositionalEncoding(nn.Module):
+    "Implement the PE function."
+
+    def __init__(self, d_model, max_len):
+        super(PositionalEncoding, self).__init__()
+
+        # 初始化Shape为(max_len, d_model)的PE (positional encoding)
+        pe = torch.zeros(max_len, d_model)
+        # 初始化一个tensor [[0, 1, 2, 3, ...]]
+        position = torch.arange(0, max_len).unsqueeze(1)
+        # 这里就是sin和cos括号中的内容，通过e和ln进行了变换
+        div_term = torch.exp(
+            torch.arange(0, d_model, 2) * -(math.log(10000.0) / d_model)
+        )
+        # 计算PE(pos, 2i)
+        pe[:, 0::2] = torch.sin(position * div_term)
+        # 计算PE(pos, 2i+1)
+        pe[:, 1::2] = torch.cos(position * div_term)
+        # 为了方便计算，在最外面在unsqueeze出一个batch
+        pe = pe.unsqueeze(0)
+        # 如果一个参数不参与梯度下降，但又希望保存model的时候将其保存下来
+        # 这个时候就可以用register_buffer
+        self.register_buffer("pe", pe)
+
+    def forward(self, x):
+        """
+        x 为embedding后的inputs，例如(1,7, 128)，batch size为1,7个单词，单词维度为128
+        """
+        # 将x和positional encoding相加。
+        # x = x + self.pe[:, : x.size(1)].requires_grad_(False)
+        # return self.dropout(x)
+        return self.pe[:,:x.size(1)].requires_grad_(False)
+        
+class BeamHupotheses(object):
+    def __init__(self, beam_width, max_len):
+        self.max_len = max_len
+        self.beam_width = beam_width
+        self.beams = []
+        self.worst_score = 1e9
+    
+    def __len__(self):
+        return len(self.beams)
+
+    def add(self, hyp, sum_logprobs):
+        score = sum_logprobs/len(hyp)
+        if len(self) < self.beam_width or score > self.worst_score:
+            self.beams.append((score, hyp))
+            if len(self)>self.beam_width:
+                sorted_scores = sorted([(s, idx) for idx, (s,_) in enumerate(self.beams)])
+                del self.beams[sorted_scores[0][1]]
+                self.worst_score = sorted_scores[1][0]
+            else:
+                self.worst_score = min(score, self.worst_score)
+
+    def is_done(self, best_sum_logprobs, cur_len=None):
+        if len(self) < self.beam_width:
+            return False
+        else:
+            if cur_len is None:
+                cur_len = self.max_len
+            cur_score = best_sum_logprobs/cur_len
+            ret = self.worst_score>=cur_score
+            return ret
+class Decoder(nn.Module):
+    def __init__(self, tgt_vocab_size, tgt_seq_len, d_model, n_heads, d_ff, n_layers, dropout) -> None:
+        super().__init__()
+        #self.api_emb = encoder.embeddings()
+        #self.encoder = encoder
+        #self.tokenizer = tokenizer
+        self.word_emb = nn.Embedding(tgt_vocab_size, d_model, padding_idx=0)
+        self.pos_emb = PositionalEncoding(d_model, tgt_seq_len*10)
+        self.dropout = nn.Dropout(dropout)
+        self.decoder_layers = nn.TransformerDecoderLayer(d_model, n_heads, d_ff, dropout, batch_first=True)
+        self.decoder = nn.TransformerDecoder(self.decoder_layers, n_layers)
+    
+    def forward(self, dec_inputs, enc_outputs, enc_key_padding_mask):
+        #PAD_ID = self.tokenizer.pad_token_id
+        PAD_ID = 0
+        #dec_outputs = self.encoder.embeddings(dec_inputs)
+        dec_emb = self.word_emb(dec_inputs)
+        dec_pos = self.pos_emb(dec_emb)
+        dec_outputs = dec_emb+dec_pos
+        dec_outputs = self.dropout(dec_outputs)
+        dec_mask = get_mask(dec_inputs)
+        dec_key_padding_mask = get_key_padding_mask(dec_inputs, PAD_ID=PAD_ID)
+        dec_outputs = self.decoder(dec_outputs, enc_outputs, tgt_mask = dec_mask, tgt_key_padding_mask=dec_key_padding_mask, memory_key_padding_mask=enc_key_padding_mask)
+        return dec_outputs
+
 
 class RNNDecoder(nn.Module):
     def __init__(self, output_emb, output_size, hidden_size, vocab_size, n_layers=1, dropout=0.5):
