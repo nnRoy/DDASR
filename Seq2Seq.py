@@ -25,7 +25,7 @@ class Seq2Seq(nn.Module):
         self.desc_emb = nn.Embedding(self.desc_vocab_size, config.emb_dim, padding_idx=PAD_ID)
         self.api_emb = nn.Embedding(self.api_vocab_size, config.emb_dim, padding_idx=PAD_ID)
 
-        self.encoder = RNNEncoder(self.desc_emb, config.emb_dim, config.n_hidden,
+        self.encoder = Encoder(self.desc_emb, config.emb_dim, config.n_hidden,
                                   True, config.n_layers, config.noise_radius)
 
         self.ctx2dec = nn.Sequential(
@@ -35,7 +35,7 @@ class Seq2Seq(nn.Module):
 
         self.ctx2dec.apply(self.init_weights)
 
-        self.decoder = RNNDecoder(self.api_emb, config.emb_dim, config.n_hidden,
+        self.decoder = Decoder(self.api_emb, config.emb_dim, config.n_hidden,
                                   self.api_vocab_size, 1, config.dropout)
 
 
