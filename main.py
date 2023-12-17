@@ -44,8 +44,13 @@ def train():
                                                num_workers=1, drop_last=False)
 
     print("Loaded data!")
+    if config.pretrain_type=="codet5":
+        tokenizer = RobertaTokenizer.from_pretrained(config.pretrain_file)
+    else:
+        tokenizer = AutoTokenizer.from_pretrained(config.pretrain_file)
 
-    model = Seq2Seq()
+    #model = Seq2Seq()
+    model = Seq2SeqModel(config.max_desc_len, tokenizer, api_vocab_size, config.max_api_len, config.d_model, config.n_heads, config.d_ff, config.n_layers, config.dropout)
     model.to(device)
 
     no_decay = ['bias', 'LayerNorm.weight']
