@@ -5,27 +5,6 @@ class Metric:
     def __init__(self):
         super(Metric, self).__init__()
 
-    def MRR(self, results, ref, longtail):
-        API_num = len(ref)
-        ref_longtail = []
-        for item_col in longtail:
-            for item_raw in item_col:
-                if item_raw > 0:
-                    ref_longtail.append(item_raw)
-        mrr = 0
-        for item in ref:
-            if item>0:
-                for j in range(len(results)):
-                    if item in results[j]:
-                        mrr += 1/(j+1)
-                        break
-
-        for item in ref_longtail:
-            for j in range(len(results)):
-                if item in results[j]:
-                    mrr += 0.4 / (j+1)
-
-        return mrr/API_num
 
     def MAP(self, results, ref, longtail):
         API_num = len(ref)
