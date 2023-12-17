@@ -24,7 +24,6 @@ def evaluate(model, metric, test_loder, vocab_desc, vocab_api, top_k, f_eval):
         long_tail_ref = long_tail_ref[1:]
         results_api = sample_words
         map.append(metric.MAP(results_api, api_ref, long_tail_ref))
-        mrr.append(metric.MRR(results_api, api_ref, long_tail_ref))
         ndcg.append(metric.NDCG(results_api, api_ref, long_tail_ref))
         max_bleu, avg_bleu = metric.bleu(results_api, api_ref, long_tail_ref)
         max_all_bleu.append(max_bleu)
@@ -45,14 +44,13 @@ def evaluate(model, metric, test_loder, vocab_desc, vocab_api, top_k, f_eval):
     max_bleu_mean = float(np.mean(max_all_bleu))
     avg_bleu_mean = float(np.mean(avg_all_bleu))
     map_mean = float(np.mean(map))
-    mrr_mean = float(np.mean(mrr))
     ndcg_mean = float(np.mean(ndcg))
 
-    report = "Avg maxBLEU %f, avg BLEU %f, avg MAP %f, avg MRR %f, avg NDCG %f" % (max_bleu_mean, avg_bleu_mean, map_mean, mrr_mean, ndcg_mean)
+    report = "Avg maxBLEU %f, avg BLEU %f, avg MAP %f, avg NDCG %f" % (max_bleu_mean, avg_bleu_mean, map_mean, ndcg_mean)
     print(report)
     f_eval.write(report + '\n')
 
-    return max_bleu_mean, avg_bleu_mean, map_mean, mrr_mean, ndcg_mean
+    return max_bleu_mean, avg_bleu_mean, map_mean, ndcg_mean
 
 
 
