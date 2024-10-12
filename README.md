@@ -24,10 +24,14 @@ This is the code reproduce repository for the paper [DDASR: Deep Diverse API Seq
 ### RNN encoder-decoder
 * BiLSTM is used as the encoder and GRU is used as the decoder.
 * For our DDASR, we select the best hyper-parameter settings when evaluating the RNN encoder-decoder architecture. 
-* Figure 1 shows the effect of varying the number of hidden units and the number of hidden layers on the accuracy of DDASR with RNN encoder-decoder architecture on the original dataset when the dimension of word embedding is 512. BLEU, MAP, and NDCG achieve the best effect, which is 78.25%, 86.83%, and 73.81%, respectively, when the number of hidden layers is three and the number of hidden units is 1,000. 
-![Figure 1](./Images/1.png)
-* Figure 2 shows the effect of the dimension of word embedding on the accuracy of DDASR with RNN encoder-decoder architecture on the original dataset when the number of hidden units is 1,000, and the number of hidden layers is 3. When the dimension of word embedding is 512, BLUE, MAP, and NDCG all achieve the best results, which are 78.25%, 86.83%, and 73.31%, respectively. Therefore, for the RNN encoder-decoder, we set the number of hidden layers, the number of hidden units, and the dimension of word embedding to 3, 1,000, and 512, respectively. 
-![Figure 2](./Images/2.png)
+* Figure 1 shows the effect of varying the number of hidden units and the number of hidden layers on the accuracy of DDASR with RNN encoder-decoder architecture on the original dataset when the dimension of word embedding is 512. BLEU, MAP, and NDCG achieve the best effect, which is 78.25%, 86.83%, and 73.81%, respectively, when the number of hidden layers is three and the number of hidden units is 1,000.
+
+
+![Figure 1](./1.png)
+* Figure 2 shows the effect of the dimension of word embedding on the accuracy of DDASR with RNN encoder-decoder architecture on the original dataset when the number of hidden units is 1,000, and the number of hidden layers is 3. When the dimension of word embedding is 512, BLUE, MAP, and NDCG all achieve the best results, which are 78.25%, 86.83%, and 73.31%, respectively. Therefore, for the RNN encoder-decoder, we set the number of hidden layers, the number of hidden units, and the dimension of word embedding to 3, 1,000, and 512, respectively.
+
+
+![Figure 2](./2.png)
 ### Transformer encoder-decoder
 * Transformer with six layers is used as the encoder end the decoder.
 * For Transformer encoder-decoder architecture, we use the same parameter of word embedding dimensions as the RNN encoder-decoder architecture.
